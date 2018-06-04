@@ -113,9 +113,9 @@ public class Database {
 			// Handle errors for JDBC
 			se.printStackTrace();
 		}
-		
 		return convertMatrix(dataset);
 	}
+	
 	
 	public double[][] convertMatrix(ArrayList<Map<String, Double>> mapList) {		
 		double[][] matrix = new double[mapList.size()][systemNames.size()];

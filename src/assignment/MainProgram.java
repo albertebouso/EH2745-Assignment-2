@@ -1,14 +1,15 @@
 package assignment;
 
-import java.util.Arrays;
-
 public class MainProgram {
 	public static void main (String[] args) {
 		// Connect to database
 		Database database = new Database(); 
 		
-		double[][] training = database.getData("measurements", 200);
+		double[][] train = database.getData("measurements", 200);
+		double[][] test = database.getData("analog_values", 20); 
 		
-		System.out.println(Arrays.deepToString(training));
+		KMeans kMean = new KMeans(4, 200); 
+		kMean.train(train); 
+		kMean.printMeans(); 
 	}
 }
