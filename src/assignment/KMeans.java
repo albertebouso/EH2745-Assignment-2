@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import assignment.util.Function;
+
 public class KMeans {
 	private int k, maxItr;
 	
@@ -19,20 +21,20 @@ public class KMeans {
 
 	/**
 	 * Function for the K-means algorithm 
-	 * @param train		Array of the trianing set 
+	 * @param train		Array of the training set 
+	 * @return			Array of the clustered training set
 	 */
 	public void train(double[][] train) {
 		try {
 			// Randomly initialize the means
 			initializeMeans(train);
-						
+			
 			// KNN algorithm 
 			for (int itr = 0; itr < maxItr; itr++) {
 				// Initialize zero arrays for each cluster
 				List<double[]> cluster = new ArrayList<double[]>();
 				for (int i = 0; i < this.k; i++) {
 					double[] zeros = new double[means[0].length]; 
-					Arrays.fill(zeros, 0); 
 					cluster.add(zeros); 
 				}
 				
@@ -42,7 +44,7 @@ public class KMeans {
 					
 					// Calculate the distance between training sample and each mean
 					for (int i = 0; i < means.length; i++) {
-						double dist = euclideanDistance(sample, means[i]); 
+						double dist = Function.euclideanDist(sample, means[i]); 
 						if (dist < minDist) {
 							minDist = dist; 
 							sampleCluster = i; 
@@ -60,15 +62,12 @@ public class KMeans {
 					for (double x : cluster.get(i)) {
 						x /= cluster.get(i).length; 
 					}
-					
-					// Save mean
 					means[i] = cluster.get(i); 
 				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		} 
-		
 	}
 	
 	/**
@@ -91,37 +90,17 @@ public class KMeans {
 			
 			for (int j = 0; j < nMeans; j++) {
 				for (int k = 0; k < train.length; k++) {
-					double dist = euclideanDistance(means[j], train[k]); 
+					double dist = Function.euclideanDist(means[j], train[k]); 
 					if (dist < dists[k]) {
 						dists[k] = dist; 
 					}
 				}
 			}
-			
 			means[nMeans] = train[weightedRandom(dists)]; 
 			nMeans++; 
 		}
 	}
-	
-	/**
-	 * Calculate the Euclidean distance between two arrays
-	 * @param x1	Array 1
-	 * @param x2	Array 2
-	 * @return		Euclidean distance 
-	 * @throws Exception 
-	 */
-	public double euclideanDistance(double[] x1, double[] x2) throws Exception {
-		if (x1.length != x2.length) {
-			throw new Exception("Input length does not match for euclidean distance caluclation");
-		}
 		
-		double dist = 0d; 
-		for (int i = 0; i < x1.length; i++) {
-			dist += Math.pow(x1[i] - x2[i], 2);			
-		}
-		return Math.sqrt(dist); 
-	}
-	
 	/**
 	 * Function to generate weighted random integer number 
 	 * @param weight	Array of weights 	
@@ -150,20 +129,38 @@ public class KMeans {
 		throw new Exception("Index not found in weighted random");
 	}
 	
+	public List<double[][]> cluster(double[][] dataset) {
+		// Initialize empty array for each cluster
+		List<double[][]> cluster = Function.create2DArrayList(this.k); 
+		
+		try {
+			for (double[] sample : dataset) {
+				double minDist = Double.MAX_VALUE; 
+				int sampleClass = 0;
+				
+				// Find minimum distance between sample and each mean
+				for (int i = 0; i < this.k; i++) {
+					double dist = Function.euclideanDist(sample, means[i]); 
+					if (dist < minDist) {
+						minDist = dist; 
+						sampleClass = i; 
+					}
+				}
+				
+				// Add sample to cluster with lowest distance to mean
+				cluster.set(sampleClass, Function.appendArray(cluster.get(sampleClass), sample)); 
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} 
+		return cluster; 
+	}
+		
 	/**
 	 * Function to get the means 
 	 * @return		Array of all the means
 	 */
 	public double[][] getMeans() {
 		return means; 
-	}
-	
-	/**
-	 * Function to print the values of the means
-	 */
-	public void printMeans() {
-		for (double[] mean : this.means) {
-			System.out.println(Arrays.toString(mean));
-		}
-	}
+	}	
 }

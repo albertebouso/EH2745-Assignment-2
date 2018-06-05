@@ -34,28 +34,11 @@ public class Database {
 	private Connection conn;
 
 	// Database name
-	private String database = "subtables"; 
+	private String database; 
 	
-	private static List<String> systemNames = Arrays.asList("CLAR_VOLT",
-															"CLAR_ANG",
-															"AMHE_VOLT",
-															"AMHE_ANG",
-															"WINL_VOLT",
-															"WINL_ANG",
-															"BOWM_VOLT",
-															"BOWM_ANG",
-															"TROY_VOLT",
-															"TROY_ANG",
-															"MAPL_VOLT",
-															"MAPL_ANG",
-															"GRAN_VOLT",
-															"GRAN_ANG",
-															"WAUT_VOLT",
-															"WAUT_ANG",
-															"CROSS_VOLT",
-															"CROSS_ANG"); 
-	
-	public Database() {
+	public Database(String dbName) {
+		this.database = dbName;
+		
 		try {			
 			// Register JDBC driver
 			Class.forName(JDBC_DRIVER);
@@ -78,7 +61,7 @@ public class Database {
 		}
 	}
 	
-	public double[][] getData(String tableName, int tableSize) {
+	public ArrayList<Map<String, Double>> getData(String tableName, int tableSize) {
 		String quary = "select * from " + tableName + " where time=?"; 
 		
 		ArrayList<Map<String, Double>> dataset = new ArrayList<Map<String, Double>>(); 
@@ -108,23 +91,37 @@ public class Database {
 				}				
 				pstm.close(); 
 			}			
-		}
-		catch (SQLException se) {
+		} catch (SQLException se) {
 			// Handle errors for JDBC
 			se.printStackTrace();
 		}
-		return convertMatrix(dataset);
-	}
+		return dataset;
+	}	
 	
-	
-	public double[][] convertMatrix(ArrayList<Map<String, Double>> mapList) {		
-		double[][] matrix = new double[mapList.size()][systemNames.size()];
+	public List<Integer> getTime(String tableName, int tableSize) {
+		String quary = "select * from " + tableName + " where time=?"; 
 		
-		for (int i = 0; i < mapList.size(); i++) {
-			for (int j = 0; j < systemNames.size(); j++) {
-				matrix[i][j] = mapList.get(i).get(systemNames.get(j));
+		List<Integer> time = new ArrayList<Integer>();
+		
+		try {
+			for (int i = 0; i <= tableSize; i++) {
+				// Prepare statement 
+				PreparedStatement pstm = conn.prepareStatement(quary);
+				pstm.setInt(1, i);
+
+				ResultSet resultSet = pstm.executeQuery();
+				
+				// Check for empty result set
+				if (resultSet.next()) {
+					time.add(i); 
+				}
+				pstm.close(); 
 			}
+		} catch (SQLException se) {
+			// Handle errors for JDBC
+			se.printStackTrace();
 		}
-		return matrix;
+
+		return time; 
 	}
 }
