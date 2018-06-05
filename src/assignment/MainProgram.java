@@ -41,7 +41,7 @@ public class MainProgram {
 			train = system.scaleMatrix(train); 
 			test = system.scaleMatrix(test); 
 			
-			// Run KNN algorithm
+			// Run K-mean algorithm
 			kMean.train(train); 
 			
 			// Find links between clusters and states

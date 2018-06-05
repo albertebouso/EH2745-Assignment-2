@@ -18,8 +18,12 @@ public class KNearestNeighbors {
 		this.k = k;
 	}
 	
-//	public List<double[][]> classify(double[][] dataset, List<double[][]> clusters) {
-//		List<double[][]> classification = Function.create2DArrayList(clusters.size()); 
+	/**
+	 * K nearest neighbors algorithm 
+	 * @param dataset			Dataset with all the points
+	 * @param clusters			Clusters from the Kmeans algorithm
+	 * @return					List of the clusters each point from the dataset belongs to
+	 */
 	public List<Integer> classify(double[][] dataset, List<double[][]> clusters) {
 		List<Integer> classification = new ArrayList<Integer>(); 
 		
@@ -45,7 +49,6 @@ public class KNearestNeighbors {
 				}
 				int idx = Function.getMaxIndex(count); 
 				classification.add(idx); 
-//				classification.set(idx, Function.appendArray(classification.get(index), sample));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -23,6 +23,9 @@ public class PowerSystem {
 		initalizeSystemParam(); 
 	}
 	
+	/**
+	 * Initialize the names of the system parameters
+	 */
 	public void initalizeSystemParam() {
 		busName = new String[] {
 				"CLAR",
@@ -127,6 +130,11 @@ public class PowerSystem {
 		return out; 
 	}
 	
+	/**
+	 * Function to associate the cluster means to the system states
+	 * @param means				Array of the cluster means
+	 * @throws Exception
+	 */
 	public void linkClusters(double[][] means) throws Exception {
 		classLink = new HashMap<Integer, String>(); 
 		
@@ -172,7 +180,14 @@ public class PowerSystem {
 		}
 	}
 	
+	/**
+	 * Add system state to the class link 
+	 * @param idx				Index of the cluster
+	 * @param className			System state name
+	 * @throws Exception
+	 */
 	public void addClassLink(int idx, String className) throws Exception {
+		// Check for duplicates 
 		for (int key : classLink.keySet()) {
 			if (idx == key) {
 				throw new Exception("Class link conflict"); 
@@ -185,6 +200,10 @@ public class PowerSystem {
 		return busName; 
 	}
 	
+	/**
+	 * Display the links between the clusters and the system states
+	 * @param k			Number of clusters
+	 */
 	public void printLinks(int k) {
 		System.out.println(""); 
 		for (int i = 0; i < k; i++) {

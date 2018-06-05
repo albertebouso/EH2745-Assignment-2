@@ -61,6 +61,12 @@ public class Database {
 		}
 	}
 	
+	/**
+	 * Function to retrieve information from the database
+	 * @param tableName		Name of the table
+	 * @param tableSize		Maximum time value
+	 * @return				Array of information from database ordered by time stamp
+	 */
 	public ArrayList<Map<String, Double>> getData(String tableName, int tableSize) {
 		String quary = "select * from " + tableName + " where time=?"; 
 		
@@ -98,6 +104,12 @@ public class Database {
 		return dataset;
 	}	
 	
+	/**
+	 * Function to retrieve all the time stamps from the database
+	 * @param tableName		Name of table
+	 * @param tableSize		Maximum time stamp value
+	 * @return				List of all the time stamps in order
+	 */
 	public List<Integer> getTime(String tableName, int tableSize) {
 		String quary = "select * from " + tableName + " where time=?"; 
 		
@@ -113,6 +125,7 @@ public class Database {
 				
 				// Check for empty result set
 				if (resultSet.next()) {
+					// Add to list
 					time.add(i); 
 				}
 				pstm.close(); 
@@ -121,7 +134,6 @@ public class Database {
 			// Handle errors for JDBC
 			se.printStackTrace();
 		}
-
 		return time; 
 	}
 }

@@ -129,6 +129,11 @@ public class KMeans {
 		throw new Exception("Index not found in weighted random");
 	}
 	
+	/**
+	 * Function to ground all the points to the closest mean 
+	 * @param dataset		Array of all the points
+	 * @return				List of the clusters 
+	 */
 	public List<double[][]> cluster(double[][] dataset) {
 		// Initialize empty array for each cluster
 		List<double[][]> cluster = Function.create2DArrayList(this.k); 
